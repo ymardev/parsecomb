@@ -6,7 +6,7 @@
 template <typename T>
 struct remove_cvref
 {
-    using type = typename std::remove_cv<std::remove_reference<T>>::type;
+    using type = std::remove_cv_t<std::remove_reference_t<T>>;
 };
 
 

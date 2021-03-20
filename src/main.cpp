@@ -30,6 +30,9 @@ int main()
 
     auto const* ptr = &tokens[0];
 
+    ECHO_LN(is_iterator_v<decltype(ptr)>);
+    ECHO_LN(is_iterator_v<decltype(tokens.begin())>);
+
 
     auto const s1 = cspan{&tokens[0], tokens.size()};
     auto const s2 = cspan{&tokens[0], &tokens[2]};
@@ -41,7 +44,7 @@ int main()
     auto const s6 = cspan{ri};
 
     for (auto const& t : s4) {
-        // ECHO_LN(t);
+        ECHO_LN(t);
     }
 
     auto const io1 = ParserIO{s1};
@@ -49,17 +52,17 @@ int main()
 
     auto const out1 = consume_token_io_1(io1);
     auto const out2 = consume_token_io_1(out1);
-    // ECHO_LN(out1.size());
-    // ECHO_LN(out2.size());
+    ECHO_LN(out1.size());
+    ECHO_LN(out2.size());
 
     cspan const s7 {tokens};
 
-    // auto const s7e = s7.last(0);
-    // for (auto const& t : s7e) {
-    //     ECHO_LN(t);
-    // }
-    // ECHO_LN(s7e.size());
-    // ECHO_LN(s7e.empty());
+    auto const s7e = s7.last(0);
+    for (auto const& t : s7e) {
+        ECHO_LN(t);
+    }
+    ECHO_LN(s7e.size());
+    ECHO_LN(s7e.empty());
 
     ParserIO<Token> out = s7;
     do {
