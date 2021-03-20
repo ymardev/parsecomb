@@ -1,4 +1,4 @@
-#include "cspan.hpp"
+#include "parsecomb/priv/struct/cspan.hpp"
 
 
 

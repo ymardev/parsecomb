@@ -1,4 +1,4 @@
-#include "parsecomb/priv/cspan.hpp"
+#include "parsecomb/priv/struct/cspan.hpp"
 #include "parsecomb/ParserIO.hpp"
 #include "util/echo.hpp"
 #include <iostream>
@@ -6,7 +6,6 @@
 #include <typeinfo>
 #include <type_traits>
 #include <vector>
-#include <cstring>
 
 
 
@@ -70,4 +69,5 @@ int main()
         ECHO_LN(out.size());
         out = consume_token_io_1(out);
     } while (!out.is_empty());
+
 }

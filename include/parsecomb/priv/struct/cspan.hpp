@@ -1,7 +1,7 @@
 #pragma once
-#include "type_traits/remove_cvref.hpp"
-#include "type_traits/is_iterator.hpp"
-#include "type_traits/iterator_to_value.hpp"
+#include "parsecomb/priv/type_traits/remove_cvref.hpp"
+#include "parsecomb/priv/type_traits/is_iterator.hpp"
+#include "parsecomb/priv/type_traits/iterator_to_value.hpp"
 #include <array>
 #include <cstddef>
 #include <iterator>
