@@ -1,17 +1,11 @@
 #pragma once
+#include "type_traits/remove_cvref.hpp"
+#include "type_traits/is_iterator.hpp"
+#include "type_traits/iterator_to_value.hpp"
 #include <array>
 #include <cstddef>
 #include <iterator>
-#include <tuple>
 #include <type_traits>
-
-
-
-namespace impl
-{
-    template <typename U>
-    using remove_cvref_t = std::remove_cv_t<std::remove_reference_t<U>>;
-}
 
 
 
@@ -19,15 +13,15 @@ template <typename T>
 class cspan
 {
 public:
-    using value_type             = impl::remove_cvref_t<T>;
+    using value_type             = remove_cvref_t<T>;
     using pointer                = value_type const*;
-    using const_pointer          = value_type const*;
+    using const_pointer          = pointer;
     using iterator               = const_pointer;
     using const_iterator         = iterator;
     using reverse_iterator       = std::reverse_iterator<iterator>;
     using const_reverse_iterator = std::reverse_iterator<const_iterator>;
     using reference              = value_type const&;
-    using const_reference        = value_type const&;
+    using const_reference        = reference;
     using size_type              = std::size_t;
 
 private:
@@ -35,8 +29,15 @@ private:
     size_type   _size;
 
 public:
+    constexpr cspan() = default;
     constexpr cspan(pointer, size_type) noexcept;
     constexpr cspan(pointer, pointer) noexcept;
+
+    template <typename It, typename =std::enable_if_t<is_iterator_v<It>>>
+    constexpr cspan(It, It) noexcept;
+
+    template <typename It, typename =std::enable_if_t<is_iterator_v<It>>>
+    constexpr cspan(It, size_type) noexcept;
 
     template <size_t Sz>
     constexpr cspan(T(&array)[Sz]) noexcept;
@@ -45,7 +46,7 @@ public:
     constexpr cspan(T const(&array)[Sz]) noexcept;
 
     template <size_t Sz>
-    constexpr cspan(std::array<T, Sz>) noexcept;
+    constexpr cspan(std::array<T, Sz> const&) noexcept;
 
     template <template <class,class...> typename C, typename U, typename...Ts>
     constexpr cspan(C<U,Ts...> const& c) noexcept;
@@ -71,30 +72,45 @@ public:
 
 
 ////////////////////////////////////////////////////////////////////////////////
-template <typename T>
-cspan(T, size_t)        -> cspan<typename std::iterator_traits<T>::value_type>;
+template <typename It>
+cspan(It, size_t)           -> cspan<iterator_to_value_type<It>>;
 
-template <typename T>
-cspan(T, T)             -> cspan<typename std::iterator_traits<T>::value_type>;
-
-template <typename T, size_t Sz>
-cspan(T(&array)[Sz])    -> cspan<impl::remove_cvref_t<T>>;
+template <typename It>
+cspan(It, It)               -> cspan<iterator_to_value_type<It>>;
 
 template <typename T, size_t Sz>
-cspan(std::array<T,Sz>) -> cspan<impl::remove_cvref_t<T>>;
+cspan(T(&array)[Sz])        -> cspan<remove_cvref_t<T>>;
+
+template <typename T, size_t Sz>
+cspan(std::array<T,Sz>)     -> cspan<remove_cvref_t<T>>;
 
 template <template <class,class...> typename C, typename T, typename...Ts>
-cspan(C<T,Ts...> const&)-> cspan<impl::remove_cvref_t<T>>;
+cspan(C<T,Ts...> const&)    -> cspan<T>;
 
 
 
 ////////////////////////////////////////////////////////////////////////////////
 template <typename T, typename...Args>
-constexpr auto make_cspan(Args&&...) noexcept -> cspan<impl::remove_cvref_t<T>>;
+constexpr auto make_cspan(Args&&...) noexcept
+    -> cspan<remove_cvref_t<T>>;
+
+template <typename T, typename...Args>
+constexpr auto make_cspan(Args&&...) noexcept
+    -> std::invoke_result_t<cspan<T>, Args...>;
 
 template <typename T, typename...Args>
 constexpr auto make_cspan_f(Args&&...) noexcept -> cspan<T>;
 
+template <template <class,class...> typename C, typename T, typename...Ts>
+constexpr auto make_cspan(C<T,Ts...> const& c) noexcept
+    -> cspan<remove_cvref_t<T>>;
+
+template <typename It, typename = std::enable_if_t<is_iterator_v<It>>>
+constexpr auto make_cspan(It, It) noexcept -> cspan<iterator_to_value_type<It>>;
+
+template <typename It, typename = std::enable_if_t<is_iterator_v<It>>>
+constexpr auto make_cspan(It, size_t) noexcept -> cspan<iterator_to_value_type<It>>;
 
 
-#include "parsecomb/priv/cspan.impl.hpp"
+
+#include "cspan.impl.hpp"

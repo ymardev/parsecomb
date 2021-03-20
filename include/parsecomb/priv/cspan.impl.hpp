@@ -1,9 +1,20 @@
-#include "parsecomb/priv/cspan.hpp"
+#include "cspan.hpp"
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+template <typename T, typename...Args>
+constexpr auto make_cspan(Args&&...args) noexcept
+    -> cspan<remove_cvref_t<T>>
+{
+    return {std::forward<Args>(args)...};
+}
 
 
 
 template <typename T, typename...Args>
-constexpr auto make_cspan(Args&&...args) noexcept -> cspan<impl::remove_cvref_t<T>>
+constexpr auto make_cspan(Args&&... args) noexcept
+    -> std::invoke_result_t<cspan<T>, Args...>
 {
     return {std::forward<Args>(args)...};
 }
@@ -20,13 +31,32 @@ constexpr auto make_cspan_f(Args&&...args) noexcept -> cspan<T>
 
 template <template <class,class...> typename C, typename T, typename...Ts>
 constexpr auto make_cspan(C<T,Ts...> const& c) noexcept
-    -> cspan<impl::remove_cvref_t<T>>
+    -> cspan<remove_cvref_t<T>>
 {
-    return {std::begin(c).operator->(), std::size(c)};
+    return {std::begin(c), std::size(c)};
 }
 
 
 
+template <typename It, typename>
+constexpr auto make_cspan(It b, It e) noexcept
+    -> cspan<iterator_to_value_type<It>>
+{
+    return {iterator_to_pointer(b), iterator_to_pointer(e)};
+}
+
+
+
+template <typename It, typename>
+constexpr auto make_cspan(It b, size_t sz) noexcept
+    -> cspan<iterator_to_value_type<It>>
+{
+    return {iterator_to_pointer(b), sz};
+}
+
+
+
+// constructors
 ////////////////////////////////////////////////////////////////////////////////
 template <typename T>
 constexpr cspan<T>::cspan(pointer b, size_type sz) noexcept:
@@ -41,6 +71,30 @@ template <typename T>
 constexpr cspan<T>::cspan(pointer b, pointer e) noexcept:
     _begin {b},
     _size  {size_type(e-b)}
+{
+}
+
+
+
+template <typename T> template <typename It, typename>
+constexpr cspan<T>::cspan(It b, It e) noexcept:
+    cspan {pointer(iterator_to_pointer(b)), pointer(iterator_to_pointer(e))}
+{
+}
+
+
+
+template <typename T> template <typename It, typename>
+constexpr cspan<T>::cspan(It b, size_type sz) noexcept:
+    cspan {pointer(iterator_to_pointer(b)), sz}
+{
+}
+
+
+
+template <typename T> template <size_t Sz>
+constexpr cspan<T>::cspan(std::array<T, Sz> const& array) noexcept:
+    cspan {iterator_to_pointer(std::begin(array)), std::size(array)}
 {
 }
 
@@ -67,19 +121,14 @@ constexpr cspan<T>::cspan(T const(&array)[Sz]) noexcept:
 template <typename T>
 template <template <class,class...> typename C, typename U, typename...Ts>
 constexpr cspan<T>::cspan(C<U,Ts...> const& c) noexcept:
-    _begin {
-([&c]() -> pointer {
-    if constexpr(std::is_same_v<pointer,typename C<U,Ts...>::const_iterator>) {
-        return std::begin(c);
-    } else {
-        return std::begin(c).operator->();
-    }
-})()},
+    _begin{pointer(iterator_to_pointer(std::cbegin(c)))},
     _size {std::size(c)}
-{}
+{
+}
 
 
 
+// other methods
 ////////////////////////////////////////////////////////////////////////////////
 template <typename T>
 constexpr auto cspan<T>::size() const -> size_type
@@ -107,17 +156,18 @@ constexpr auto cspan<T>::operator[](size_type idx) const -> const_reference
 
 ////////////////////////////////////////////////////////////////////////////////
 template <typename T>
-constexpr auto cspan<T>::first(size_type sz) const -> cspan
+constexpr auto cspan<T>::first(size_type elem_count) const -> cspan
 {
-    return {_begin, sz};
+    return {_begin, elem_count};
 }
 
 
 
 template <typename T>
-constexpr auto cspan<T>::last(size_type sz) const -> cspan
+constexpr auto cspan<T>::last(size_type elem_count) const -> cspan
 {
-    return {_begin+size()-sz, sz};
+    auto const offset = _size-elem_count;
+    return {_begin+offset, elem_count};
 }
 
 

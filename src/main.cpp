@@ -1,4 +1,3 @@
-#include "parsecomb/priv/tcb/span.hpp"
 #include "parsecomb/priv/cspan.hpp"
 #include "parsecomb/ParserIO.hpp"
 #include "util/echo.hpp"
@@ -24,12 +23,13 @@ auto consume_token_io_1(ParserIO<Token> const& input) -> ParserIO<Token>
 
 int main()
 {
-    using tcb::span;
-    std::vector<Token> const tokens {"hello", "world"};
+    std::boolalpha(std::cout);
+    std::vector<Token> const tokens {"hello", "world", "howdy", "today"};
 
     auto const it = tokens.begin();
 
     auto const* ptr = &tokens[0];
+
 
     auto const s1 = cspan{&tokens[0], tokens.size()};
     auto const s2 = cspan{&tokens[0], &tokens[2]};
@@ -41,10 +41,30 @@ int main()
     auto const s6 = cspan{ri};
 
     for (auto const& t : s4) {
-        ECHO_LN(t);
+        // ECHO_LN(t);
     }
 
-    // auto const io = ParserIO{s1};
-    // auto const out1 = consume_token_io_1(io);
+    auto const io1 = ParserIO{s1};
+    auto const io2 = ParserIO<Token>{std::string_view{"hello"}};
+
+    auto const out1 = consume_token_io_1(io1);
+    auto const out2 = consume_token_io_1(out1);
     // ECHO_LN(out1.size());
+    // ECHO_LN(out2.size());
+
+    cspan const s7 {tokens};
+
+    // auto const s7e = s7.last(0);
+    // for (auto const& t : s7e) {
+    //     ECHO_LN(t);
+    // }
+    // ECHO_LN(s7e.size());
+    // ECHO_LN(s7e.empty());
+
+    ParserIO<Token> out = s7;
+    do {
+        ECHO_LN(out.tokens()[0]);
+        ECHO_LN(out.size());
+        out = consume_token_io_1(out);
+    } while (!out.is_empty());
 }
