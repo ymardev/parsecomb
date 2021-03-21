@@ -1,4 +1,5 @@
 #include "parsecomb/priv/struct/cspan.hpp"
+#include <cassert>
 
 
 
@@ -158,6 +159,7 @@ constexpr auto cspan<T>::operator[](size_type idx) const -> const_reference
 template <typename T>
 constexpr auto cspan<T>::first(size_type elem_count) const -> cspan
 {
+    assert(elem_count <= _size);
     return {_begin, elem_count};
 }
 
@@ -166,6 +168,7 @@ constexpr auto cspan<T>::first(size_type elem_count) const -> cspan
 template <typename T>
 constexpr auto cspan<T>::last(size_type elem_count) const -> cspan
 {
+    assert(elem_count <= _size);
     auto const offset = _size-elem_count;
     return {_begin+offset, elem_count};
 }
