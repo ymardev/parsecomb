@@ -3,13 +3,13 @@
 
 
 template <typename T>
-auto Any(ParserIO<T> const&) -> ParserIO<T>;
+auto Something(ParserIO<T> const&) -> ParserIO<T>;
 
 template <typename T>
-auto Empty(ParserIO<T> const&) -> ParserIO<T>;
+auto Nothing(ParserIO<T> const&) -> ParserIO<T>;
 
 template <typename T>
-auto AnyOrEmpty(ParserIO<T> const&) -> ParserIO<T>;
+auto Anything(ParserIO<T> const&) -> ParserIO<T>;
 
 
 

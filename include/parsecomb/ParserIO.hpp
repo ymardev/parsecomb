@@ -16,7 +16,8 @@ public:
 public:
     ParserIO(cspan<token_type>) noexcept;
 
-    template <typename U, typename=std::enable_if_t<std::is_convertible_v<U,cspan<T>>>>
+    template <typename U,
+        typename = std::enable_if_t<std::is_convertible_v<U,cspan<T>>>>
     ParserIO(U&&) noexcept;
 
     auto fail()             const -> ParserIO;

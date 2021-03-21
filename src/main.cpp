@@ -15,38 +15,12 @@ using Char = char;
 
 
 
-#define PARSER_TYPE_AND_CAPTURE_BLOCK(PD_TYPE, PD_CAPTURE...) \
-    [PD_CAPTURE](ParserIO<PD_TYPE> const& input) -> ParserIO<PD_TYPE>
-
-
-#define PARSER_PARSE_INPUT_BLOCK  \
-    if (!input.is_empty())
-
-
-#define PARSER_FAIL_INPUT       \
-    return input.fail();
-
-
-
-
 auto char_range(char b, char e) -> Parser<Char>
 {
-    return PARSER_TYPE_AND_CAPTURE_BLOCK(Char, b, e)
-    {
-        PARSER_PARSE_INPUT_BLOCK
-        {
-            auto const c = input.tokens()[0];
-            ECHO_LN(c);
-            if (!(c<b||c>e)) {
-                return input.succeed(1);
-            }
-        }
-        PARSER_FAIL_INPUT
-    };
     return [b,e](ParserIO<Char> const& input) -> ParserIO<char>
     {
         if (!input.is_empty()) {
-            auto const c = *input.tokens().cbegin();
+            auto const c = input[0];
             if (!(c<b||c>e)) {
                 return input.succeed(1);
             }
@@ -55,7 +29,12 @@ auto char_range(char b, char e) -> Parser<Char>
     };
 }
 
-auto char_range(char b) -> Parser<Char> {return char_range(b,b);}
+
+
+auto char_range(char b) -> Parser<Char>
+{
+    return char_range(b,b);
+}
 
 
 
@@ -105,14 +84,22 @@ int main()
     auto const alpha = char_range('A', 'z');
     auto const digit = char_range('0', '9');
 
-    auto const id_chars = Sequence(FirstMatch(alpha,_), Optional(OneOrMore(FirstMatch(alpha,FirstMatch(_,digit)))));
+    auto const id_chars =
+        Sequence(
+            FirstMatch(alpha,_),
+            Optional(OneOrMore(FirstMatch(alpha,FirstMatch(_,digit))))
+        );
+
     auto const id       = make_token_parser(id_chars);
 
     auto const hello = make_token_parser("hello");
     auto const world = make_token_parser("world");
     auto const excl  = make_token_parser("!");
 
-    std::vector<Token> const tokens2 {"(", "(", "hello", ")", ")", "(", "world", ")", "!"};
+    std::vector<Token> const tokens2 {
+        "(", "(", "hello", ")", ")", "(", "world", ")", "!"
+    };
+
     auto const sentence = Sequence(hello, Sequence(world, excl));
 
     auto const l = make_token_parser("(");
