@@ -2,7 +2,7 @@
 workspace "C++17-Project-Workspace"
    configurations { "simple", "debug", "release" }
 
-project "13-parsecomb"
+project "parsecomb"
 
    kind        "ConsoleApp"
    objdir      "%{cfg.buildcfg}/obj"
@@ -10,7 +10,7 @@ project "13-parsecomb"
    cppdialect  "C++17"
    location    "../"
    targetdir   "../bin"
-   targetname  "13-parsecomb"
+   targetname  "parsecomb"
 
    files {
       "../src/**.cpp"

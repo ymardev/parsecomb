@@ -43,10 +43,10 @@ auto ParserIO<T>::fail() const -> ParserIO
 template <typename T>
 auto ParserIO<T>::succeed(size_t consume_count) const -> ParserIO
 {
-    if (consume_count >= _size) {
+    if (consume_count >= size()) {
         return {Status::Success, {}};
     }
-    long long const keep_count = m_token_span.size()-consume_count;
+    long long const keep_count = size()-consume_count;
     return {Status::Success, m_token_span.last(keep_count)};
 }
 
