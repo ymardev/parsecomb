@@ -11,21 +11,26 @@ class ParserIO
     cspan<T>                      m_tokens_span;
 
 public:
-    ParserIO(cspan<T>) noexcept;
+    using token_type = T;
 
-    template <typename...Args>
-    ParserIO(Args&&... args) noexcept;
+public:
+    ParserIO(cspan<token_type>) noexcept;
 
-    auto fail()          const -> ParserIO;
-    auto succeed(size_t) const -> ParserIO;
+    template <typename U, typename=std::enable_if_t<std::is_convertible_v<U,cspan<T>>>>
+    ParserIO(U&&) noexcept;
 
-    auto tokens()        const -> cspan<T> const&;
-    auto size()          const -> size_t;
-    auto is_success()    const -> bool;
-    auto is_empty()      const -> bool;
+    auto fail()             const -> ParserIO;
+    auto succeed(size_t)    const -> ParserIO;
+
+    auto tokens()           const -> cspan<token_type> const&;
+    auto size()             const -> size_t;
+    auto is_success()       const -> bool;
+    auto is_empty()         const -> bool;
+    auto operator[](size_t) const -> token_type const&;
+
 
 private:
-    ParserIO(Status, cspan<T>) noexcept;
+    ParserIO(Status, cspan<token_type>) noexcept;
 
 };
 
