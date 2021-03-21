@@ -8,7 +8,7 @@ template <typename T>
 class ParserIO
 {
     enum Status {Failure,Success} m_status;
-    cspan<T>                      m_tokens_span;
+    cspan<T>                      m_token_span;
 
 public:
     using token_type = T;

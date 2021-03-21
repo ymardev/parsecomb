@@ -78,6 +78,7 @@ int main()
     std::boolalpha(std::cout);
     using namespace std::string_view_literals;
 
+
     std::vector<Token> const tokens {"1_a", "a1", "abc123", "123abc"};
 
     auto const _     = char_range('_');
