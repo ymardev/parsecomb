@@ -1,7 +1,18 @@
 #pragma once
 #include "parsecomb/Parser.hpp"
+#include <functional>
 
 
+
+template <typename T>
+using CombinatorUnary  = std::function<Parser<T>(Parser<T> const&)>;
+
+template <typename T>
+using CombinatorBinary = std::function<Parser<T>(Parser<T> const&, Parser<T> const&)>;
+
+
+
+////////////////////////////////////////////////////////////////////////////////
 template <typename T>
 auto Sequence(Parser<T> const&, Parser<T> const&) -> Parser<T>;
 
@@ -19,6 +30,12 @@ auto OneOrMore(Parser<T> const&) -> Parser<T>;
 
 template <typename T>
 auto Several(Parser<T> const&) -> Parser<T>;
+
+template <typename T>
+auto Between(Parser<T> const&, Parser<T> const&) -> CombinatorUnary<T>;
+
+template <typename T>
+auto NestedBetween(Parser<T> const&, Parser<T> const&) -> CombinatorUnary<T>;
 
 
 

@@ -28,5 +28,9 @@ auto Empty(ParserIO<T> const& input) -> ParserIO<T>
 template <typename T>
 auto AnyOrEmpty(ParserIO<T> const& input) -> ParserIO<T>
 {
-    return FirstMatch(Any<T>, Empty<T>);
+    if (input.is_empty()) {
+        return input.succeed(0);
+    } else {
+        return input.succeed(1);
+    }
 }

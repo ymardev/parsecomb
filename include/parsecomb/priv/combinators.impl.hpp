@@ -90,3 +90,41 @@ auto Several(Parser<T> const& p) -> Parser<T>
 {
     return Sequence(p, OneOrMore(p));
 }
+
+
+
+template <typename T>
+auto Between(Parser<T> const& pl, Parser<T> const& pr) -> CombinatorUnary<T>
+{
+    return [pl,pr](Parser<T> const& pm) -> Parser<T>
+    {
+        return Sequence(pl, Sequence(pm, pr));
+    };
+}
+
+
+
+template <typename T>
+auto NestedBetween(Parser<T> const& pl, Parser<T> const& pr)->CombinatorUnary<T>
+{
+    return [pl,pr](Parser<T> const& pm) -> Parser<T>
+    {
+        return [pl,pr,pm](ParserIO<T> const& input) -> ParserIO<T>
+        {
+            auto const out_l = pl(input);
+
+            if (out_l.is_success())
+            {
+                auto const out_flat = Sequence(pm, pr)(out_l);
+
+                if (out_flat.is_success()) {
+                    return out_flat;
+                }
+
+                return Between(pl,pr)(NestedBetween(pl,pr)(pm))(input);
+            }
+
+            return input.fail();
+        };
+    };
+}
