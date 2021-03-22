@@ -2,6 +2,7 @@
 #include "parsecomb/generators.hpp"
 #include "parsecomb/Parser.hpp"
 #include "parsecomb/parsers.hpp"
+#include "parsecomb/test_parser.hpp"
 #include "util/echo.hpp"
 #include <iostream>
 #include <string>
@@ -63,21 +64,39 @@ int main()
     std::boolalpha(std::cout);
     using namespace std::string_view_literals;
 
-    std::vector<Token> const tokens  {"hello", "world", "!"};
-    std::vector<Token> const tokens2 {"hello", "hello", "world", "!"};
-    std::vector<Token> const tokens3 {"hello", "hello", "hello", "world", "!"};
+    {
+        std::vector<Token> const tokens1 {"hello", "world", "!"};
+        std::vector<Token> const tokens2 {"hello", "hello", "world", "!"};
+        std::vector<Token> const tokens3 {"hello", "hello", "hello", "world", "!"};
 
-    auto const hello = TokenParser(Token{"hello"});
-    auto const hello2 = Not(Exactly(2, hello));
-    auto const e3 = Exactly<Token>(3);
-    auto const hello3 = e3(hello);
+        auto const hello  = TokenParser(Token{"hello"});
+        auto const hello2 = Exactly(2, hello);
+        auto const e3     = Exactly<Token>(3);
+        auto const ne2    = Not(Exactly<Token>(2));
+        auto const n2h    = ne2(hello);
 
-    ECHO_LN(hello3(tokens).is_success());
-    ECHO_LN(hello3(tokens).size());
-    ECHO_LN(hello3(tokens2).is_success());
-    ECHO_LN(hello3(tokens2).size());
-    ECHO_LN(hello3(tokens3).is_success());
-    ECHO_LN(hello3(tokens3).size());
+        test_parser(n2h, tokens1);
+        test_parser(n2h, tokens2);
+        test_parser(n2h, tokens3);
+    }
+    {
+        auto const tp     = &TokenParser<Token>;
+
+        auto const parens = NestedBetween(tp({"("}), tp({")"}));
+        auto const hello  = tp("hello");
+
+        auto const not_parens = Not(parens);
+
+        std::vector<Token> const tokens1 {"(", "hello", ")", "(", "world", ")", "!"};
+        std::vector<Token> const tokens2 {"hello", "world", "!"};
+
+        test_parserw(32, parens(hello), tokens1);
+        test_parserw(32, parens(hello), tokens2);
+        test_parserw(32, not_parens(hello), tokens1);
+        test_parserw(32, not_parens(hello), tokens2);
+    }
+
+    return 0;
 }
 
 
