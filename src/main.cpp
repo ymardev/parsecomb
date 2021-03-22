@@ -69,13 +69,15 @@ int main()
 
     auto const hello = TokenParser(Token{"hello"});
     auto const hello2 = Not(Exactly(2, hello));
+    auto const e3 = Exactly<Token>(3);
+    auto const hello3 = e3(hello);
 
-    ECHO_LN(hello2(tokens).is_success());
-    ECHO_LN(hello2(tokens).size());
-    ECHO_LN(hello2(tokens2).is_success());
-    ECHO_LN(hello2(tokens2).size());
-    ECHO_LN(hello2(tokens3).is_success());
-    ECHO_LN(hello2(tokens3).size());
+    ECHO_LN(hello3(tokens).is_success());
+    ECHO_LN(hello3(tokens).size());
+    ECHO_LN(hello3(tokens2).is_success());
+    ECHO_LN(hello3(tokens2).size());
+    ECHO_LN(hello3(tokens3).is_success());
+    ECHO_LN(hello3(tokens3).size());
 }
 
 

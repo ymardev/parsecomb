@@ -38,6 +38,9 @@ template <typename T>
 auto Exactly(size_t, Parser<T> const&) -> Parser<T>;
 
 template <typename T>
+auto Exactly(size_t) -> CombinatorUnary<T>;
+
+template <typename T>
 auto Between(Parser<T> const&, Parser<T> const&) -> CombinatorUnary<T>;
 
 template <typename T>

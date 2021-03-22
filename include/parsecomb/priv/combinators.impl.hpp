@@ -140,6 +140,17 @@ auto Exactly(size_t n, Parser<T> const& p) -> Parser<T>
 
 
 template <typename T>
+auto Exactly(size_t n) -> CombinatorUnary<T>
+{
+    return [n](Parser<T> const& p) -> Parser<T>
+    {
+        return Exactly(n, p);
+    };
+}
+
+
+
+template <typename T>
 auto Between(Parser<T> const& pl, Parser<T> const& pr) -> CombinatorUnary<T>
 {
     return [pl,pr](Parser<T> const& pm) -> Parser<T>
