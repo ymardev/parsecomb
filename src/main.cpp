@@ -1,4 +1,5 @@
 #include "parsecomb/combinators.hpp"
+#include "parsecomb/generators.hpp"
 #include "parsecomb/Parser.hpp"
 #include "parsecomb/parsers.hpp"
 #include "util/echo.hpp"
@@ -38,23 +39,6 @@ auto char_range(char b) -> Parser<Char>
 
 
 
-auto make_token_parser(std::string_view word) -> Parser<Token>
-{
-    return [word=std::string{word}](ParserIO<Token> const& input)
-        -> ParserIO<Token>
-    {
-        if (!input.is_empty())
-        {
-            if (input.tokens()[0] == word) {
-                return input.succeed(1);
-            }
-        }
-        return input.fail();
-    };
-}
-
-
-
 auto make_token_parser(Parser<Char> cp) -> Parser<Token>
 {
     return [cp=std::move(cp)](ParserIO<Token> const& input) -> ParserIO<Token>
@@ -83,7 +67,7 @@ int main()
     std::vector<Token> const tokens2 {"hello", "hello", "world", "!"};
     std::vector<Token> const tokens3 {"hello", "hello", "hello", "world", "!"};
 
-    auto const hello = make_token_parser(Token{"hello"});
+    auto const hello = TokenParser(Token{"hello"});
     auto const hello2 = Not(Exactly(2, hello));
 
     ECHO_LN(hello2(tokens).is_success());
@@ -117,9 +101,9 @@ int main_archive()
 
     auto const id       = make_token_parser(id_chars);
 
-    auto const hello = make_token_parser("hello");
-    auto const world = make_token_parser("world");
-    auto const excl  = make_token_parser("!");
+    auto const hello = TokenParser(Token{"hello"});
+    auto const world = TokenParser(Token{"world"});
+    auto const excl  = TokenParser(Token{"!"});
 
     std::vector<Token> const tokens2 {
         "(", "(", "hello", ")", ")", "(", "world", ")", "!"
@@ -127,8 +111,8 @@ int main_archive()
 
     auto const sentence = Sequence(hello, Sequence(world, excl));
 
-    auto const l = make_token_parser("(");
-    auto const r = make_token_parser(")");
+    auto const l = TokenParser(Token{"("});
+    auto const r = TokenParser(Token{")"});
 
     auto const grp = NestedBetween(l,r);
 
