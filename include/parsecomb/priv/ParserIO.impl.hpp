@@ -12,6 +12,15 @@ ParserIO<T>::ParserIO(cspan<token_type> tokens) noexcept:
 
 
 template <typename T>
+ParserIO<T>::ParserIO(token_type const& single_token) noexcept:
+    m_status     {Status::Failure},
+    m_token_span {&single_token, 1}
+{
+}
+
+
+
+template <typename T>
 template <typename U, typename>
 ParserIO<T>::ParserIO(U&& arg) noexcept:
     m_status     {Failure},
