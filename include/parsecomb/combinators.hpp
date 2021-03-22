@@ -14,6 +14,9 @@ using CombinatorBinary = std::function<Parser<T>(Parser<T> const&, Parser<T> con
 
 ////////////////////////////////////////////////////////////////////////////////
 template <typename T>
+auto Not(Parser<T> const&) -> Parser<T>;
+
+template <typename T>
 auto Sequence(Parser<T> const&, Parser<T> const&) -> Parser<T>;
 
 template <typename T>
@@ -30,6 +33,9 @@ auto OneOrMore(Parser<T> const&) -> Parser<T>;
 
 template <typename T>
 auto Several(Parser<T> const&) -> Parser<T>;
+
+template <typename T>
+auto Exactly(size_t, Parser<T> const&) -> Parser<T>;
 
 template <typename T>
 auto Between(Parser<T> const&, Parser<T> const&) -> CombinatorUnary<T>;

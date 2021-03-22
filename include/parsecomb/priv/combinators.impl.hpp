@@ -4,6 +4,20 @@
 
 
 template <typename T>
+auto Not(Parser<T> const& p) -> Parser<T>
+{
+    return [p](ParserIO<T> const& input) -> ParserIO<T>
+    {
+        if (!p(input).is_success()) {
+            return input.succeed(1);
+        }
+        return input.fail();
+    };
+}
+
+
+
+template <typename T>
 auto Sequence(Parser<T> const& p1, Parser<T> const& p2) -> Parser<T>
 {
     return [p1,p2](ParserIO<T> const& input) -> ParserIO<T>
@@ -89,6 +103,38 @@ template <typename T>
 auto Several(Parser<T> const& p) -> Parser<T>
 {
     return Sequence(p, OneOrMore(p));
+}
+
+
+
+template <typename T>
+auto Exactly(size_t n, Parser<T> const& p) -> Parser<T>
+{
+    return [n,p](ParserIO<T> const& input) -> ParserIO<T>
+    {
+        size_t count = 0;
+        auto out = input;
+
+        while (count < n)
+        {
+            out = p(out);
+
+            if (!out.is_success() || out.is_empty()) {
+                break;
+            }
+
+            ++count;
+        }
+
+        if (n == count)
+        {
+            if (!out.is_empty() && !p(out).is_success())
+            {
+                return input.succeed(n);
+            }
+        }
+        return input.fail();
+    };
 }
 
 

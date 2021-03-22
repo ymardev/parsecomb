@@ -73,7 +73,31 @@ auto make_token_parser(Parser<Char> cp) -> Parser<Token>
 
 
 
+////////////////////////////////////////////////////////////////////////////////
 int main()
+{
+    std::boolalpha(std::cout);
+    using namespace std::string_view_literals;
+
+    std::vector<Token> const tokens  {"hello", "world", "!"};
+    std::vector<Token> const tokens2 {"hello", "hello", "world", "!"};
+    std::vector<Token> const tokens3 {"hello", "hello", "hello", "world", "!"};
+
+    auto const hello = make_token_parser(Token{"hello"});
+    auto const hello2 = Not(Exactly(2, hello));
+
+    ECHO_LN(hello2(tokens).is_success());
+    ECHO_LN(hello2(tokens).size());
+    ECHO_LN(hello2(tokens2).is_success());
+    ECHO_LN(hello2(tokens2).size());
+    ECHO_LN(hello2(tokens3).is_success());
+    ECHO_LN(hello2(tokens3).size());
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+int main_archive()
 {
     std::boolalpha(std::cout);
     using namespace std::string_view_literals;
@@ -111,4 +135,6 @@ int main()
     auto const gh = grp(hello);
     ECHO_LN(gh(tokens2).is_success());
     ECHO_LN(gh(tokens2).size());
+
+    return 0;
 }
