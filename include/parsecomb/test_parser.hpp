@@ -34,7 +34,7 @@ auto _test_parser(
     Parser<T> const&  parser,
     std::string_view  input_name,
     InputType&&       input
-);
+) -> ParserIO<T>;
 
 
 
@@ -45,7 +45,7 @@ auto _test_parser_w(
     Parser<T> const&  parser,
     std::string_view  input_name,
     InputType&&       input
-);
+) -> ParserIO<T>;
 
 
 
@@ -68,22 +68,23 @@ auto _test_parser(
     Parser<T> const&  parser,
     std::string_view  input_name,
     InputType&&       input
-){
+) -> ParserIO<T>
+{
     auto const cout_flags = std::cout.flags();
     auto const output = parser(std::forward<InputType>(input));
 
-    std::ostringstream result;
-    result.setf(result.boolalpha);
-    result << output.is_success() << ',';
-
     std::cout
-        << parser_name << " <- "
-        << input_name  << " [ "
-        << std::left << std::setw(7) << result.str()
+        << parser_name
+        << " <- "
+        << input_name
+        << " [" << std::right << std::setw(6)
+        << output.is_success() << ','
+        << std::right << std::setw(3)
         << output.size()
         << " ]\n";
 
     std::cout.flags(cout_flags);
+    return output;
 }
 
 
@@ -95,23 +96,23 @@ auto _test_parser_w(
     Parser<T> const&  parser,
     std::string_view  input_name,
     InputType&&       input
-){
+) -> ParserIO<T>
+{
     auto const cout_flags = std::cout.flags();
     auto const output = parser(std::forward<InputType>(input));
 
     std::ostringstream description;
     description << parser_name << " <- " << input_name;
 
-    std::ostringstream result;
-    result.setf(result.boolalpha);
-    result << output.is_success() << ',';
-
     std::cout
         << std::left << std::setw(field_width)
-        << description.str() << " [ "
-        << std::setw(7) << result.str()
-        << std::right << std::setw(4) << output.size()
+        << description.str()
+        << " [" << std::right << std::setw(6)
+        << output.is_success() << ','
+        << std::right << std::setw(3)
+        << output.size()
         << " ]\n";
 
     std::cout.flags(cout_flags);
+    return output;
 }
