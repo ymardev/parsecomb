@@ -17,6 +17,12 @@ template <typename T>
 auto Not(Parser<T> const&) -> Parser<T>;
 
 template <typename T>
+auto Not(CombinatorUnary<T> const&) -> CombinatorUnary<T>;
+
+template <typename T>
+auto Not(CombinatorBinary<T> const&) -> CombinatorBinary<T>;
+
+template <typename T>
 auto Sequence(Parser<T> const&, Parser<T> const&) -> Parser<T>;
 
 template <typename T>

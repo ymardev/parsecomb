@@ -18,6 +18,28 @@ auto Not(Parser<T> const& p) -> Parser<T>
 
 
 template <typename T>
+auto Not(CombinatorUnary<T> const& c) -> CombinatorUnary<T>
+{
+    return [c](Parser<T> const& p) -> Parser<T>
+    {
+        return Not(c(p));
+    };
+}
+
+
+
+template <typename T>
+auto Not(CombinatorBinary<T> const& c) -> CombinatorBinary<T>
+{
+    return [c](Parser<T> const& p1, Parser<T> const& p2) -> Parser<T>
+    {
+        return Not(c(p1,p2));
+    };
+}
+
+
+
+template <typename T>
 auto Sequence(Parser<T> const& p1, Parser<T> const& p2) -> Parser<T>
 {
     return [p1,p2](ParserIO<T> const& input) -> ParserIO<T>
