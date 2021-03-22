@@ -1,7 +1,4 @@
-#include "parsecomb/combinators.hpp"
-#include "parsecomb/generators.hpp"
-#include "parsecomb/Parser.hpp"
-#include "parsecomb/parsers.hpp"
+#include "parsecomb/parsecomb.hpp"
 #include "parsecomb/test_parser.hpp"
 #include "util/echo.hpp"
 #include <iostream>
