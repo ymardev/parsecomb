@@ -70,8 +70,10 @@ auto _test_parser(
     InputType&&       input
 ) -> ParserIO<T>
 {
-    auto const cout_flags = std::cout.flags();
     auto const output = parser(std::forward<InputType>(input));
+
+    auto const cout_flags = std::cout.flags();
+    std::cout.setf(std::cout.boolalpha);
 
     std::cout
         << parser_name
@@ -98,11 +100,13 @@ auto _test_parser_w(
     InputType&&       input
 ) -> ParserIO<T>
 {
-    auto const cout_flags = std::cout.flags();
     auto const output = parser(std::forward<InputType>(input));
 
     std::ostringstream description;
     description << parser_name << " <- " << input_name;
+
+    auto const cout_flags = std::cout.flags();
+    std::cout.setf(std::cout.boolalpha);
 
     std::cout
         << std::left << std::setw(field_width)

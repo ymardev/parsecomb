@@ -16,4 +16,5 @@ template <typename T, typename U>
 auto ConvertParser(Parser<U>) -> Parser<T>;
 
 
+
 #include "parsecomb/priv/generators.impl.hpp"
