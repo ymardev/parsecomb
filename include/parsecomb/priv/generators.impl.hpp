@@ -59,3 +59,23 @@ auto ConvertParser(Parser<U> p) -> Parser<T>
         return input.fail();
     };
 }
+
+
+
+template <typename T, typename Fn, typename U>
+auto ConvertParser(Fn conv, Parser<U> p) -> Parser<T>
+{
+    return [p=std::move(p), conv=std::move(conv)](ParserIO<T> const& input)
+        -> ParserIO<T>
+    {
+        if (!input.is_empty())
+        {
+            auto const out = p(conv(input[0]));
+
+            if (out.is_success() && out.is_empty()) {
+                return input.succeed(1);
+            }
+        }
+        return input.fail();
+    };
+}
