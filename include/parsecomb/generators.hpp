@@ -4,12 +4,12 @@
 
 
 
-template <typename T>
-auto TokenParser(T) -> Parser<T>;
+template <typename T, typename Equal= std::equal_to<T>>
+auto TokenParser(T, Equal&& =Equal()) -> Parser<T>;
 
 
-template <typename T, typename Comp = std::less<T>>
-auto RangeParser(T, T) -> Parser<T>;
+template <typename T, typename Less = std::less<T>>
+auto RangeParser(T, T, Less&& =Less()) -> Parser<T>;
 
 
 template <typename T, typename U>
@@ -17,7 +17,7 @@ auto ConvertParser(Parser<U>) -> Parser<T>;
 
 
 template <typename T, typename Fn, typename U>
-auto ConvertParser(Fn conversion_function, Parser<U>) -> Parser<T>;
+auto ConvertParser(Fn convert, Parser<U>) -> Parser<T>;
 
 
 
