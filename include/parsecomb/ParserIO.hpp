@@ -28,8 +28,8 @@ public:
     auto size()             const -> size_t;
     auto is_success()       const -> bool;
     auto is_empty()         const -> bool;
-    auto operator[](size_t) const -> token_type const&;
 
+    auto operator[](size_t) const -> token_type const&;
 
 private:
     ParserIO(Status, cspan<token_type>) noexcept;

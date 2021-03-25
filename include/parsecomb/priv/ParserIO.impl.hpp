@@ -94,6 +94,7 @@ auto ParserIO<T>::is_empty() const -> bool
 
 
 
+////////////////////////////////////////////////////////////////////////////////
 template <typename T>
 auto ParserIO<T>::operator[](size_t idx) const -> token_type const&
 {
