@@ -1,4 +1,3 @@
-#pragma once
 #include "parsecomb/parsecomb.hpp"
 #include "parsecomb/test_parser.hpp"
 #include <string>
