@@ -4,7 +4,7 @@
 
 
 template <typename T>
-auto Something(ParserIO<T> const& input) -> ParserIO<T>
+auto Some(ParserIO<T> const& input) -> ParserIO<T>
 {
     if (!input.is_empty()) {
         return input.succeed(1);
@@ -15,7 +15,7 @@ auto Something(ParserIO<T> const& input) -> ParserIO<T>
 
 
 template <typename T>
-auto Nothing(ParserIO<T> const& input) -> ParserIO<T>
+auto No(ParserIO<T> const& input) -> ParserIO<T>
 {
     if (input.is_empty()) {
         return input.succeed(0);
@@ -26,7 +26,7 @@ auto Nothing(ParserIO<T> const& input) -> ParserIO<T>
 
 
 template <typename T>
-auto Anything(ParserIO<T> const& input) -> ParserIO<T>
+auto Any(ParserIO<T> const& input) -> ParserIO<T>
 {
     if (input.is_empty()) {
         return input.succeed(0);
