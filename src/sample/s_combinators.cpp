@@ -4,24 +4,24 @@
 #include <vector>
 
 
-using StringToken = std::string;
+using Token = std::string;
 
 
 
 void combinators_sample()
 {
-    auto const hello       = TokenParser<StringToken>("hello");
-    auto const world       = TokenParser<StringToken>("world");
-    auto const paren_left  = TokenParser<StringToken>("(");
-    auto const paren_right = TokenParser<StringToken>(")");
+    auto const hello       = TokenParser<Token>("hello");
+    auto const world       = TokenParser<Token>("world");
+    auto const paren_left  = TokenParser<Token>("(");
+    auto const paren_right = TokenParser<Token>(")");
     auto const in_parens   = Between(paren_left, paren_right);
     auto const no_parens   = Not(in_parens);
 
-    std::vector<StringToken> const tokens1 {
+    std::vector<Token> const tokens1 {
         "hello", "world", "!"
     };
 
-    std::vector<StringToken> const tokens2 {
+    std::vector<Token> const tokens2 {
         "(", "hello", ")", "(", "world", ")", "!"
     };
 
