@@ -1,22 +1,20 @@
 /*
 
+Forward capture for lambdas.
 
-forward_capture<T> class for lambdas
-
-fwdcap macro.
-
+This file declares:
+    class forward_capture<T>
+    macro fwdcap
 
 Usage:
-
-    auto const lambda    = [fwdcap(variable)]() { ... };
-
-    auto const long_name = [forward_capture(variable)]() { ... };
-
+    auto long_form  = [variable=forward_capture(variable)]() { ... };
+    auto short_form = [fwdcap(variable)]() { ... };
 
 
 */
 #pragma once
 #include <tuple>
+
 
 
 
