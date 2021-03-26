@@ -17,6 +17,8 @@
 ```cpp
 #include "parsecomb/parsecomb.hpp"
 #include "parsecomb/test_parser.hpp"
+#include <string>
+using Token = std::string;
 
 auto const hello       = TokenParser<Token>("hello");
 auto const world       = TokenParser<Token>("world");
