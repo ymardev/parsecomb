@@ -51,7 +51,7 @@ test_parser(Sequence(no_parens(hello), no_parens(world)), tokens2); // [false,6]
 test_parser(FirstMatch(hello, in_parens(hello)), tokens1);          // [true, 2]
 test_parser(FirstMatch(hello, in_parens(hello)), tokens2);          // [true, 3]
 
-// Consume several Tokens between parentheses
+// Consume several Tokens, each being between parentheses
 test_parser(Several(in_parens(Some<Token>)), tokens1);              // [false,3]
 test_parser(Several(in_parens(Some<Token>)), tokens2);              // [true, 0]
 

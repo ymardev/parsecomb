@@ -6,9 +6,9 @@
 
 int main()
 {
-    parser_conversion_sample();
+    combinators_sample();
 
     std::cout << "\n";
 
-    combinators_sample();
+    parser_conversion_sample();
 }
