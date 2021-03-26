@@ -38,6 +38,7 @@ std::vector<Token> const tokens2 {
 };
 
 
+// Combine the above parsers into sequences.
 // Output of test_parser is of format:  [is_success, remaining_count]
 test_parser(Sequence(hello, world), tokens1);                       // [true, 1]
 test_parser(Sequence(hello, world), tokens2);                       // [false,6]
