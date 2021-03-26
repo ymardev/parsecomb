@@ -7,7 +7,7 @@
 
 - A `Parser<T>` may be a primitive parser applying a single piece of logic, or it may be any combination thereof.
 
-- A Combinator takes one or multiple parsers and wrap them in a new parser that represents the combination.
+- A Combinator takes one or multiple parsers and wraps them in a new parser that represents the combination.
 
 - `Parser<T1>` and `Parser<T2>` types do not mix together in a combination. An explicit conversion must be used. The `ConvertParser` function is such a way of constructing a new parser from one of another type.
 
@@ -35,7 +35,7 @@ std::vector<Token> const tokens2 {
     "(", "hello", ")", "(", "world", ")", "!"
 };
 
-// Output of test_parser if of format:  [is_success, remaining_count]
+// Output of test_parser is of format:  [is_success, remaining_count]
 test_parser(Sequence(hello, world), tokens1);                       // [true, 1]
 test_parser(Sequence(hello, world), tokens2);                       // [false,7]
 test_parser(Sequence(in_parens(hello), in_parens(world)), tokens1); // [false,3]
