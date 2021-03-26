@@ -1,6 +1,6 @@
 #include "parsecomb/generators.hpp"
 #include "parsecomb/ParserIO.hpp"
-#include "gramparse/util/forward_capture.hpp"
+#include "parsecomb/priv/util/forward_capture.hpp"
 
 
 

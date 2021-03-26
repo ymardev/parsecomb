@@ -79,10 +79,10 @@ auto BestMatch(Parser<T> const& p1, Parser<T> const& p2) -> Parser<T>
         if (out1.is_success() && out2.is_success()) {
             return (out1.size() < out2.size()) ? out1 : out2;
         }
-        else if (out1.is_succss()) {
+        else if (out1.is_success()) {
             return out1;
         }
-        else if (out2.is_succss()) {
+        else if (out2.is_success()) {
             return out2;
         }
         return input.fail();
